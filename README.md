@@ -9,7 +9,7 @@
  
  "r" removes background mask
  
- hit space to start processing the webcam image (in the blue box)
+ hold space to start processing the webcam image (in the blue box)
 
 
 i'll change this to be more professional later
