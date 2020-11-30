@@ -5,6 +5,8 @@ import math
 from phue import Bridge
 import time
 import copy
+import smtplib
+from email.message import EmailMessage
 
 # General Settings
 prediction = ''
@@ -12,12 +14,30 @@ action = ''
 score = 0
 img_counter = 500
 
+#method for SMS message
+def SMS_alert(subject, message, to):
+    msg = EmailMessage()
+    msg.set_content(message)
+    msg['subject'] = subject
+    msg['to'] = to
+   
+    user = "garagealerter@gmail.com"
+    msg['from'] = user
+    password = "uqpflkcgtbangkui"
+
+    server = smtplib.SMTP("smtp.gmail.com", 587)
+    server.starttls()
+    server.login(user, password)
+    server.send_message(msg)
+
+    server.quit()
+
 #Phue
-bridge_ip = '192.168.1.83'
-b = Bridge(bridge_ip)
-on_command = {'transitiontime': 0, 'on': True, 'bri': 254}
-off_command = {'transitiontime': 0, 'on': False, 'bri': 254}
-l = b.lights
+#bridge_ip = '192.168.1.83'
+#b = Bridge(bridge_ip)
+#on_command = {'transitiontime': 0, 'on': True, 'bri': 254}
+#off_command = {'transitiontime': 0, 'on': False, 'bri': 254}
+#l = b.lights
 
 #gesture_names = {0: 'down',
 #                 1: 'palm',
@@ -32,10 +52,10 @@ gesture_names = {0: 'Fist',
                  3: 'Palm',
                  4: 'Peace'}
                  
-
-
 #model = load_model('/Users/phillip/Desktop/School References/wireless/handrecognition_model.h5')
-model = load_model('/Users/phillip/Desktop/School References/wireless/VGG_cross_validated.h5')
+
+#change this load model to wherever you put the VGG_cross_validated.h5 file
+model = load_model('/Users/Brian/Documents/Visual Studio 2019/Projects/PythonApplication2/PythonApplication2/VGG_cross_validated.h5')
 def predict_rgb_image(img):
     result = gesture_names[model.predict_classes(img)[0]]
     print(result)
@@ -71,6 +91,7 @@ learningRate = 0
 
 #variables
 bgCap = 0
+garageOpened = False
 
 capture = cv2.VideoCapture(0)
 
@@ -80,6 +101,12 @@ while(capture.isOpened()):
     frame = cv2.flip(frame, 1)  # flip the frame horizontally
     cv2.rectangle(frame, (int(cap_region_x_begin * frame.shape[1]), 0),
                 (frame.shape[1], int(cap_region_y_end * frame.shape[0])), (255, 0, 0), 2)
+    
+    # The 1st number changes the whiteness of the camera. 0 is default. The higher it is, the brighter/whiter the camera is where 255 is max with the camera being completly white. 
+    # The 2nd number changes the blackness of the camera. 255 is default. The lower it is, the blacker the camera is where 0 is min with the camera being completely black.
+    # You can mess around the values to whatever you want.
+    cv2.normalize(frame, frame, 0, 255, cv2.NORM_MINMAX)
+
     cv2.imshow('frame',frame)
 
     if bgCap == 1:
@@ -122,6 +149,7 @@ while(capture.isOpened()):
             cv2.drawContours(drawing, [res], 0, (0, 255, 0), 2)
             cv2.drawContours(drawing, [hull], 0, (0, 0, 255), 3)
 
+        cv2.normalize(frame, frame, 50, 255, cv2.NORM_MINMAX)
         cv2.imshow('output', drawing)
     
     k = cv2.waitKey(5) & 0xFF
@@ -156,8 +184,17 @@ while(capture.isOpened()):
             except:
                 pass
 
+        # SMS_alert functionality shown with "Okay" gesture. 1st part is the subject of the message, 2nd part is the actual message and 3rd part is the phone number. 
+        # I have at&t so I have @txt.att.net at the end but you can use this link for the extension depending on your phone provider/carrier
+        # https://www.digitaltrends.com/mobile/how-to-send-a-text-from-your-email-account/
 
-        
+        elif prediction == "Okay":
+            if garageOpened == False:
+                SMS_alert("Garage Alert", "Your garage has been opened", "8582264394@txt.att.net")
+                garageOpened = True
+            elif garageOpened == True:
+                SMS_alert("Garage Alert", "Your garage has been closed", "8582264394@txt.att.net")
+                garageOpened = False
 
 cv2.destroyAllWindows()
 capture.release()
