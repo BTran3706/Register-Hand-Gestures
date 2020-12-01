@@ -6,6 +6,7 @@ from phue import Bridge
 import time
 import copy
 import smtplib
+import pywhatkit as kit
 from email.message import EmailMessage
 
 # General Settings
@@ -195,6 +196,9 @@ while(capture.isOpened()):
             elif garageOpened == True:
                 SMS_alert("Garage Alert", "Your garage has been closed", "8582264394@txt.att.net")
                 garageOpened = False
+
+        elif prediction == "Palm":
+            kit.playonyt("lofi hip hop radio - beats to relax/study to")
 
 cv2.destroyAllWindows()
 capture.release()
