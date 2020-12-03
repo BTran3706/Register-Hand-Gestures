@@ -1,15 +1,13 @@
-# basic instructions
- download whatever you need to run live_recog.py
- 
- set the path of the model to wherever you put the VGG model
- 
- run it
- 
- "b" on keyboard creates background mask -> do this first
- 
- "r" removes background mask
- 
- hold space to start processing the webcam image (in the blue box)
+# Worked in a team/group of 5 to create this project which can read and register your hand gestures. Depending on which gesture you show, different actions occur from turning on lights, playing a youtube video or sending an SMS message to your phone. 
 
+## Instructions
 
-i'll change this to be more professional later
+ - Webcam is required
+ 
+ - Inside live_recog.py, change the path of load_model to where the VGG_cross_validated.h5 file is located
+
+ - First press "b" on your keyboard to create a background mask
+ 
+ - Press "r" to remove the background mask
+ 
+ - Hold space to start processing the webcam image (inside the blue box)
