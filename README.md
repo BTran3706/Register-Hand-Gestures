@@ -1,4 +1,4 @@
-# Worked in a team/group of 5 to create this project which can read and register your hand gestures. Depending on which gesture you show, different actions occur from turning on lights, playing a youtube video or sending an SMS message to your phone. 
+# School project where I worked in a team/group of 5 to create this program which can read and register your hand gestures. Depending on which gesture you show, different actions occur from turning on lights, playing a youtube video or sending an SMS message to your phone. 
 
 ## Instructions
 
