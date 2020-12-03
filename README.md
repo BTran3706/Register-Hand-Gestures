@@ -6,6 +6,8 @@
  
  - Inside live_recog.py, change the path of load_model to where the VGG_cross_validated.h5 file is located
 
+ - Run live_recog.py
+ 
  - First press "b" on your keyboard to create a background mask
  
  - Press "r" to remove the background mask
